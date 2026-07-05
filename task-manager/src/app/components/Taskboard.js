@@ -5,36 +5,53 @@ import AddTaskForm from "./AddTaskForm";
 import TaskList from "./Tasklist";
 import TaskStats from "./Taskstats";
 
-export default function TaskBoard() {
-  const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState("all");
 
-  useEffect(() => {
-    const saved = localStorage.getItem("next-tasks");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          setTasks(parsed);
-        } else {
-          setTasks([]);
-        }
-      } catch (e) {
-        console.error("Failed to parse tasks", e);
-        setTasks([]);
-      }
-    } else {
-      setTasks([
+export default function TaskBoard() {
+  const [tasks, setTasks] = useState(() => {
+    if (typeof window === "undefined") {
+      return [
         { id: 1, text: "Review Next.js App Router docs", completed: true },
         { id: 2, text: "Refactor state into TaskBoard component", completed: false },
         { id: 3, text: "Write clean documentation in README.md", completed: false },
-      ]);
+      ];
     }
-  }, []);
+
+    try {
+      const saved = window.localStorage.getItem("next-tasks");
+      if (!saved) {
+        return [
+          { id: 1, text: "Review Next.js App Router docs", completed: true },
+          { id: 2, text: "Refactor state into TaskBoard component", completed: false },
+          { id: 3, text: "Write clean documentation in README.md", completed: false },
+        ];
+      }
+
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : [
+        { id: 1, text: "Review Next.js App Router docs", completed: true },
+        { id: 2, text: "Refactor state into TaskBoard component", completed: false },
+        { id: 3, text: "Write clean documentation in README.md", completed: false },
+      ];
+    } catch (error) {
+      console.error("Failed to parse tasks", error);
+      return [
+        { id: 1, text: "Review Next.js App Router docs", completed: true },
+        { id: 2, text: "Refactor state into TaskBoard component", completed: false },
+        { id: 3, text: "Write clean documentation in README.md", completed: false },
+      ];
+    }
+  });
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
     if (tasks && tasks.length > 0) {
-      localStorage.setItem("next-tasks", JSON.stringify(tasks));
+      window.localStorage.setItem("next-tasks", JSON.stringify(tasks));
+    } else {
+      window.localStorage.removeItem("next-tasks");
     }
   }, [tasks]);
 

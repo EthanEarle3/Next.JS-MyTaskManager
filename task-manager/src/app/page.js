@@ -1,4 +1,4 @@
-import TaskBoard from "./components/Taskboard";
+import TaskBoard from "./components/TaskBoard";
 
 export default function HomePage() {
   return (
