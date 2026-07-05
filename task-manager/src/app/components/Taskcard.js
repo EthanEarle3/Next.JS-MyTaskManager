@@ -1,10 +1,26 @@
+
+// COMPONENT: TaskCard
+// This component is a client component because it uses React state and effects
+// It is used to display a single task in the TaskList component
+// It receives a task object, onToggle function, and onDelete function as props
+// It renders the task text, a checkbox to toggle completion status, and a delete button
+// It uses conditional rendering and styling to indicate the task's completion status and to show/hide the delete button on hover
+// Props:
+// - task: an object representing the task, with properties id, text, and completed
+// - onToggle: a function to toggle the completion status of the task
+// - onDelete: a function to delete the task from the list
+// - Task: a task object with properties id, text, and completed
 export default function TaskCard({ task, onToggle, onDelete }) {
   if (!task) {
     return null;
   }
-
+ // getting the properties of the object and creating default values in case of errors
   const { id = 0, text = "", completed = false } = task;
-
+// The main container for the TaskCard component, which includes the checkbox, task text, and delete button
+// The checkbox is controlled by the completed property of the task object, and it calls the onToggle function with the task id when changed
+// The task text is displayed with a line-through style if the task is completed, and it truncates long text to fit within the container
+// The delete button is hidden by default and becomes visible when the user hovers over the TaskCard component
+// The delete button calls the onDelete function with the task id when clicked
   return (
     <li className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/50 transition-colors group">
       <div className="flex items-center gap-3 flex-1 min-w-0">
