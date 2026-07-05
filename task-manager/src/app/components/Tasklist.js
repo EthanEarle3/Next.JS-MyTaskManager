@@ -1,22 +1,9 @@
-import React from "react";
 import TaskCard from "./Taskcard";
 
-interface Task {
-  id: number;
-  text: string;
-  completed: boolean;
-}
-
-interface TaskListProps {
-  tasks: Task[];
-  onToggle: (id: number) => void;
-  onDelete: (id: number) => void;
-}
-
-export default function TaskList({ tasks = [], onToggle, onDelete }: TaskListProps) {
+export default function TaskList({ tasks = [], onToggle, onDelete }) {
   const safeTasks = tasks || [];
-
-  // Filter out any accidentally corrupted or null/undefined items
+  
+  // Clean filtering to guarantee malformed variables never bypass map iteration
   const cleanTasks = safeTasks.filter((task) => task && typeof task === "object" && "id" in task);
 
   if (cleanTasks.length === 0) {
@@ -40,3 +27,4 @@ export default function TaskList({ tasks = [], onToggle, onDelete }: TaskListPro
     </ul>
   );
 }
+

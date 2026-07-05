@@ -1,29 +1,32 @@
-'use client';
+"use client";
 
-import {useState} from 'react';
+import { useState } from "react";
 
-export default function AddTaskForm({onAdd}) {
-  const [title, setTitle] = useState('');
+export default function AddTaskForm({onAddTask}) {
+  const [text, setText] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();            // prevent page reload
-    if (!title.trim()) return;    // guard: reject blank submissions
-    onAdd(title.trim());
-    setTitle('');                 // reset field
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+    onAddTask(text.trim());
+    setText("");
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
+    <form onSubmit={handleSubmit} className="flex gap-2">
       <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="New task..."
-        className="flex-1 border rounded px-3 py-2 text-sm"
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="Add a new structural milestone..."
+        className="flex-1 px-4 py-3 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-slate-900 transition-all text-sm"
       />
       <button
         type="submit"
-        className="bg-green-700 text-white px-4 py-2 rounded text-sm hover:bg-green-800"
-      >Add</button>
+        className="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-xl transition-colors cursor-pointer whitespace-nowrap"
+      >
+        Add Task
+      </button>
     </form>
   );
 }

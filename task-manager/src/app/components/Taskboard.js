@@ -1,23 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import AddTaskForm from "./Addtaskform";
+import AddTaskForm from "./AddTaskForm";
 import TaskList from "./Tasklist";
 import TaskStats from "./Taskstats";
-import React from "react";
-
-interface Task {
-  id: number;
-  text: string;
-  completed: boolean;
-}
-
-type FilterType = "all" | "active" | "completed";
 
 export default function TaskBoard() {
-  // Always initialize strictly as an array to prevent undefined errors
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [filter, setFilter] = useState<FilterType>("all");
+  const [tasks, setTasks] = useState([]);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     const saved = localStorage.getItem("next-tasks");
@@ -48,8 +38,8 @@ export default function TaskBoard() {
     }
   }, [tasks]);
 
-  const handleAddTask = (text: string): void => {
-    const newTask: Task = {
+  const handleAddTask = (text) => {
+    const newTask = {
       id: Date.now(),
       text,
       completed: false,
@@ -57,7 +47,7 @@ export default function TaskBoard() {
     setTasks((prev) => [newTask, ...(prev || [])]);
   };
 
-  const handleToggleTask = (id: number): void => {
+  const handleToggleTask = (id) => {
     setTasks((prev) =>
       (prev || []).map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
@@ -65,15 +55,14 @@ export default function TaskBoard() {
     );
   };
 
-  const handleDeleteTask = (id: number): void => {
+  const handleDeleteTask = (id) => {
     setTasks((prev) => (prev || []).filter((task) => task.id !== id));
   };
 
-  const handleClearCompleted = (): void => {
+  const handleClearCompleted = () => {
     setTasks((prev) => (prev || []).filter((task) => !task.completed));
   };
 
-  // Safely guard array filter execution
   const safeTasks = tasks || [];
   const filteredTasks = safeTasks.filter((task) => {
     if (filter === "active") return !task.completed;
@@ -81,18 +70,13 @@ export default function TaskBoard() {
     return true;
   });
 
-  const TaskListWithHandlers = TaskList as React.ComponentType<{
-    tasks: Task[];
-    onToggle: (id: number) => void;
-    onDelete: (id: number) => void;
-  }>;
-
   return (
     <div className="space-y-6 bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-slate-100/50">
-      <AddTaskForm onAdd={handleAddTask} />
+      <AddTaskForm onAddTask={handleAddTask} />
 
+      {/* Filter Tabs */}
       <div className="flex border-b border-slate-100 pb-1 gap-2">
-        {(["all", "active", "completed"] as FilterType[]).map((type) => (
+        {["all", "active", "completed"].map((type) => (
           <button
             key={type}
             onClick={() => setFilter(type)}
@@ -107,7 +91,7 @@ export default function TaskBoard() {
         ))}
       </div>
 
-      <TaskListWithHandlers
+      <TaskList
         tasks={filteredTasks}
         onToggle={handleToggleTask}
         onDelete={handleDeleteTask}
