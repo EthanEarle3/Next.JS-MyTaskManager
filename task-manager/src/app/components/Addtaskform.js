@@ -1,4 +1,5 @@
 "use client";
+// COMPONENT: AddTaskForm
 // This component is a client component because it uses React state and effects
 // It is used to add a new task to the task list in the TaskBoard component
 // It receives a callback function onAddTask as a prop, which is called when the form is submitted

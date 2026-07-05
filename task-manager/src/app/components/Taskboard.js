@@ -1,4 +1,9 @@
 "use client";
+// COMPONENT: TaskBoard
+// This component is a client component because it uses React state and effects
+// It is used to manage the task list, including adding, toggling, deleting, and filtering tasks
+// It uses the AddTaskForm, TaskList, and TaskStats components to render the UI
+// Passes down the props and functions to the child components to handle user interactions and state updates
 
 import { useState, useEffect } from "react";
 import AddTaskForm from "./AddTaskForm";
@@ -7,6 +12,8 @@ import TaskStats from "./Taskstats";
 
 
 export default function TaskBoard() {
+  // Keeps track of the lists of tasks and the current states of the tasks, including their completion status and the
+  //  current filter applied to the list
   const [tasks, setTasks] = useState(() => {
     if (typeof window === "undefined") {
       return [
@@ -15,7 +22,8 @@ export default function TaskBoard() {
         { id: 3, text: "Write clean documentation in README.md", completed: false },
       ];
     }
-
+// Gets tasks from local storage to keep the tasks across reload pages.
+// If there are no tasks in local storage, it returns a default list of tasks
     try {
       const saved = window.localStorage.getItem("next-tasks");
       if (!saved) {
@@ -25,7 +33,7 @@ export default function TaskBoard() {
           { id: 3, text: "Write clean documentation in README.md", completed: false },
         ];
       }
-
+// If there are tasks in local storage, it parses the JSON string and returns the array of tasks
       const parsed = JSON.parse(saved);
       return Array.isArray(parsed) ? parsed : [
         { id: 1, text: "Review Next.js App Router docs", completed: true },
@@ -33,6 +41,8 @@ export default function TaskBoard() {
         { id: 3, text: "Write clean documentation in README.md", completed: false },
       ];
     } catch (error) {
+      // If there is an error parsing the JSON string, it logs the error and returns a default list of tasks
+      // This ensures that the app does not crash and provides a fallback for the user
       console.error("Failed to parse tasks", error);
       return [
         { id: 1, text: "Review Next.js App Router docs", completed: true },
@@ -41,6 +51,7 @@ export default function TaskBoard() {
       ];
     }
   });
+  // Keeps track of the current filter applied to the task list, which can be "all", "active", or "completed"
   const [filter, setFilter] = useState("all");
 
   useEffect(() => {
@@ -54,7 +65,8 @@ export default function TaskBoard() {
       window.localStorage.removeItem("next-tasks");
     }
   }, [tasks]);
-
+// The handleAddTask function creates a new task object with a unique id, the provided text, and a completed status of false
+// It then updates the tasks state by adding the new task to the beginning of the list, ensuring that the most recent task is displayed first
   const handleAddTask = (text) => {
     const newTask = {
       id: Date.now(),
@@ -63,7 +75,11 @@ export default function TaskBoard() {
     };
     setTasks((prev) => [newTask, ...(prev || [])]);
   };
-
+// The handleToggleTask function toggles the completed status of a task by its id
+// It maps over the current tasks and updates the completed property of the matching task, while leaving other tasks unchanged
+// The handleDeleteTask function removes a task from the list by filtering out the task with the specified id
+// The handleClearCompleted function removes all completed tasks from the list by filtering out tasks that have their completed property set to true
+// The filteredTasks variable applies the current filter to the list of tasks, returning only the tasks that match the selected filter criteria
   const handleToggleTask = (id) => {
     setTasks((prev) =>
       (prev || []).map((task) =>
@@ -86,12 +102,11 @@ export default function TaskBoard() {
     if (filter === "completed") return task.completed;
     return true;
   });
-
+    // The main container for the TaskBoard component, which includes the AddTaskForm, filter buttons, TaskList, and TaskStats components
   return (
     <div className="space-y-6 bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-slate-100/50">
       <AddTaskForm onAddTask={handleAddTask} />
 
-      {/* Filter Tabs */}
       <div className="flex border-b border-slate-100 pb-1 gap-2">
         {["all", "active", "completed"].map((type) => (
           <button
