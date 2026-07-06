@@ -22,6 +22,8 @@ export default function TaskCard({ task, onToggle, onDelete }) {
 // The delete button is hidden by default and becomes visible when the user hovers over the TaskCard component
 // The delete button calls the onDelete function with the task id when clicked
   return (
+    // Tailwind CSS classes style the main container to be a flex container with spacing, background color, hover effect, and transition
+    // The group class is used to enable the hover effect on the delete button when the user hovers over the TaskCard component
     <li className="flex items-center justify-between p-4 bg-white hover:bg-slate-50/50 transition-colors group">
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <input
@@ -54,6 +56,7 @@ export default function TaskCard({ task, onToggle, onDelete }) {
           className="w-4 h-4"
         >
           <path
+          // Tailwind CSS classes style the delete button to be hidden by default and become visible when the user hovers over the TaskCard component, with padding, text color, hover effect, border radius, and transition
             strokeLinecap="round"
             strokeLinejoin="round"
             d="M14.74 9l-.34 6m-4.74 0L9.3 9m12 3.667V9.75M3.75 9.75V12.67M19.5 9.75a3 3 0 00-3-3H7.5a3 3 0 00-3 3m15 0V19.5a3 3 0 01-3 3H7.5a3 3 0 01-3-3V9.75"

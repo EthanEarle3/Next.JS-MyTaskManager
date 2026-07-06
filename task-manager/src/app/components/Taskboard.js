@@ -13,7 +13,7 @@ import TaskStats from "./Taskstats";
 
 export default function TaskBoard() {
   // Keeps track of the lists of tasks and the current states of the tasks, including their completion status and the
-  //  current filter applied to the list
+  //  current filter applied to the list using the useState to manage the state of the tasks and the filter, and useEffect to persist the tasks to local storage whenever they change
   const [tasks, setTasks] = useState(() => {
     if (typeof window === "undefined") {
       return [
@@ -22,8 +22,8 @@ export default function TaskBoard() {
         { id: 3, text: "Write clean documentation in README.md", completed: false },
       ];
     }
-// Gets tasks from local storage to keep the tasks across reload pages.
-// If there are no tasks in local storage, it returns a default list of tasks
+// Gets tasks from local storage to keep the tasks across reload pages using localstorage.getItem("next-tasks") and JSON.parse(saved) to parse the JSON string into an array of task objects
+// If there are no tasks in local storage, it returns a default list of tasks using the ternary operator to check if the parsed value is an array, and if not, it returns the default list of tasks
     try {
       const saved = window.localStorage.getItem("next-tasks");
       if (!saved) {
@@ -104,6 +104,8 @@ export default function TaskBoard() {
   });
     // The main container for the TaskBoard component, which includes the AddTaskForm, filter buttons, TaskList, and TaskStats components
   return (
+    // Tailwind CSS classes style the main container to have spacing, background color, padding, rounded corners, border, and shadow effects
+    // The AddTaskForm component is used to add new tasks, the filter buttons allow the user to filter the task list, the TaskList component displays the list of tasks, and the TaskStats component shows the statistics of the task list
     <div className="space-y-6 bg-white p-6 rounded-2xl border border-slate-100 shadow-xl shadow-slate-100/50">
       <AddTaskForm onAddTask={handleAddTask} />
 
@@ -112,6 +114,8 @@ export default function TaskBoard() {
           <button
             key={type}
             onClick={() => setFilter(type)}
+           // Tailwind CSS classes style the filter buttons to have padding, text size, font weight, rounded corners, and transition effects
+           // The button's background and text color change based on whether it is the currently selected filter, providing feedback to the user 
             className={`px-4 py-2 text-sm font-medium rounded-lg capitalize transition-colors cursor-pointer ${
               filter === type
                 ? "bg-slate-900 text-white"
